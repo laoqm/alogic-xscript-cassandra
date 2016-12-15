@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<settings>
+    <!-- 服务目录配置 -->
+    <parameter id="servant.config.master" value="java:///conf/servant.catalog.xml#App" />
+	<parameter id="cassandra.master" value="java:///com/alogicbus/cassandra/context/cassandra.source.xml#com.alogicbus.cassandra.context.CassandraSource" final="true"/>    
+</settings>

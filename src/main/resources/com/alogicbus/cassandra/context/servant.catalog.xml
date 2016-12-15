@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogs>
+	<!-- alogic-framework的内置服务 -->
+	<catalog module="com.logicbus.models.servant.impl.XMLResourceServantCatalog" 
+		xrc="/com/logicbus/service/servant.addons.xml"
+		class="com.logicbus.models.servant.impl.XMLResourceServantCatalog"
+		name="inner"/>
+						
+	<!-- ketty的内置服务 -->		
+	<catalog module="com.logicbus.models.servant.impl.XMLResourceServantCatalog" 
+		xrc="/com/ketty/service/servant.xml"
+		class="com.ketty.service.Agent"
+		name="inner"/>	
+		
+	
+	<!-- 基于together框架的服务 -->
+	<catalog module="com.alogic.together.catalog.TogetherServantCatalog"
+		xrc="/conf/servant-together.xml" 
+		class="App" />
+
+	<!-- 非together框架服务 -->
+	<catalog module="com.logicbus.models.servant.impl.XMLResourceServantCatalog"
+		xrc="/conf/servant.xml" 
+		class="App" 
+		name="inner" />
+		
+	<!-- cassandra内置服务 -->
+	<catalog module="com.logicbus.models.servant.impl.XMLResourceServantCatalog"
+		xrc="/com/alogicbus/cassandra/context/cassandra.servant.xml" 
+		class="com.alogicbus.cassandra.context.CassandraSource" name="inner" />
+		
+</catalogs>

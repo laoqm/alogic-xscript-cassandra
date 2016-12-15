@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog name="root">
+	<catalog name="cassandra">
+		<service 
+		    id="Source" 
+		    name="Source" 
+		    note="查询cassandra数据源信息"
+			visible="system" 
+			log="none"
+			module="com.alogicbus.cassandra.service.CassandraSourceReport" />
+		<properties>
+			<parameter id="jsonDefault" value="true" />
+			<parameter id="servant.maxActive" value="10" />
+			<parameter id="servant.maxIdle" value="1" />
+		</properties>
+	</catalog>
+</catalog>
+

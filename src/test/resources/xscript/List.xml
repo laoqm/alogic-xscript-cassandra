@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<script>
+	
+	<!-- 使用cassandra插件 -->
+	<using xmlTag="cass-conf" module="com.alogic.xscript.cassandra.CassandraNS" />
+	
+	<!-- <constants id="keyword" value="kai" /> -->
+	
+	<cass-conf>
+		<cassandra connection="conn1">	
+			<list tag="data"
+				cql.Query="
+	 				SELECT
+						username as name,
+						password as pw,
+						playlist_names
+	 				FROM
+	 					users	
+	 				#{not_nvl(keyword,'WHERE (
+	 					      username=' +bind('keyword') +')'
+	 				    )}
+	 				    
+	 			" />
+		</cassandra>
+	</cass-conf>
+</script>
