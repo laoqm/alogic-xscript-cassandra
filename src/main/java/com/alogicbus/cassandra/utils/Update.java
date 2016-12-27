@@ -12,8 +12,8 @@ import com.datastax.driver.core.Session;
 
 /**
  * Update操作
- * 
  * @author laoqiming
+ * 
  */
 public class Update extends CassandraOperation {
 
@@ -35,7 +35,7 @@ public class Update extends CassandraOperation {
 	
 		try {
 			boolean flag=false;
-			stmt = session.prepare(cql);
+			stmt = StatementCache.get(session, cql);
 		    BoundStatement bs = stmt.bind(params);
 		    resultSet = session.execute(bs);
 		    Row row = resultSet.one();

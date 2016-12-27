@@ -218,6 +218,19 @@ public class CassandraTools {
 	}
 	
 	/**
+	 * Select 多行数据,分页查询
+	 * @param session
+	 * @param cql
+	 * @param limit
+	 * @param offset
+	 * @param args
+	 * @return
+	 */
+	public static List<Map<String, Object>> listAsObjectByPage(Session session,String cql,int limit,int offset,int fetchSize, Object... args) {
+		return listAsObjectByPage(session, cql,limit,offset,fetchSize,null, args);
+	}
+	
+	/**
 	 * Select 多行数据
 	 * @param session
 	 * @param cql
@@ -233,6 +246,25 @@ public class CassandraTools {
 			return selector.result(renderer);
 		}
 		return selector.result();
+	}
+	
+    /**
+     * Select 多行数据，分页查询
+     * @param session
+     * @param cql
+     * @param limit
+     * @param offset
+     * @param renderer
+     * @param args
+     * @return
+     */
+	public static List<Map<String, Object>> listAsObjectByPage(Session session, String cql, int limit,int offset,int fetchSize,RowRenderer<Object> renderer,Object... args) {
+		Select selector = new Select(session);
+		selector.execute(cql,limit,offset,fetchSize,args);
+		if (renderer != null) {
+			return selector.result(renderer,limit);
+		}
+		return selector.result(limit);
 	}
 
 	private static boolean isNotNull(String value) {

@@ -11,7 +11,6 @@ public class Demo2 {
 		
 		try{
 		ConnectionHolder c = SessionManager.getConnection("conn1");
-		System.out.println(c.getId()+","+c.getName()+","+c.getHosts()+","+c.getPort());
 	    Session s = c.getSession();
 	    System.out.println(s);
 		}finally{

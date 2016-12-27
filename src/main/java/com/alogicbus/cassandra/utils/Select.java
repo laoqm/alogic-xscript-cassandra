@@ -36,7 +36,7 @@ public class Select extends CassandraOperation {
 	 */
 	public Select execute(String cql,Object... params) throws BaseException{
 		try {
-			stmt = session.prepare(cql);
+			stmt = StatementCache.get(session, cql);
 		    BoundStatement bs = stmt.bind(params);
 		    resultSet = session.execute(bs);
 			return this;
@@ -47,68 +47,40 @@ public class Select extends CassandraOperation {
 	}
 	
 	/**
-	 * 获取查询结果（单返回值）
 	 * 
-	 * @return 结果值
-	 * @throws Exception
-	 *//*
-	public Object single()throws BaseException{
+	 * @param cql
+	 * @param limit 返回的最大记录数
+	 * @param offset 记录偏移量
+	 * @param fetchSize 每次扫描的记录数,注：由于cassandra不能直接定位到某一行，因此必须从第一行开始扫描，这个fetchSize就相当于每次扫描的记录数。
+	 *        fetchSize可通过多次调整来找到最佳值，通常情况下fetchSize应该大于或等于limit
+	 * @param params
+	 * @return
+	 * @throws BaseException
+	 */
+	public Select execute(String cql,int limit,int offset,int fetchSize,Object... params)throws BaseException{
 		try {
-			if (rs != null){
-			   return rs.one();
-			}
-			return null;
+			stmt = StatementCache.get(session, cql);
+		    BoundStatement bs = stmt.bind(params);
+		    resultSet = PaginationUtil.fetchRowsWithPage(session, bs, offset, limit, fetchSize);
+			return this;
 		}
 		catch (Exception ex){
 			throw new BaseException("core.cql_error","Error occurs when executing cql:" + ex.getMessage());
-		}		
-	}
-
-	*//**
-	 * 以Long形式获取查询结果（单返回值）
-	 * @param dftValue 缺省值
-	 * @return 结果值
-	 * @throws BaseException
-	 * 
-	 * @since 1.6.2.3
-	 *//*
-	public long singleAsLong(long dftValue)throws BaseException{
-		Object result = single();
-		
-		if (result == null){
-			return dftValue;
-		}
-		
-		if (result instanceof Number){
-			Number value = (Number) result;
-			return value.longValue();
-		}
-		
-		String value = result.toString();
-		try{
-			return Long.parseLong(value);
-		}catch (Exception ex){
-			return dftValue;
 		}
 	}
 	
-	*//**
-	 * 以String形式获取查询结果（单返回值）
-	 * @param dftValue 缺省值
-	 * @return 结果值
-	 * @throws BaseException
+	/**
 	 * 
-	 * @since 1.6.2.3
-	 *//*
-	public String singleAsString(String dftValue)throws BaseException{
-		Object result = single();
-		
-		if (result == null){
-			return dftValue;
-		}
-		
-		return result.toString();
-	}*/
+	 * @param cql
+	 * @param limit
+	 * @param offset
+	 * @param params
+	 * @return
+	 * @throws BaseException
+	 */
+	public Select execute(String cql,String limit ,String offset,Object... params) throws BaseException{
+		return execute(cql, limit, offset, 10, params);
+	}
 	
 	/**
 	 * 获取查询结果(单行返回值)
@@ -154,9 +126,9 @@ public class Select extends CassandraOperation {
 			if (resultSet != null) {
 				if (renderer == null) {
 					renderer = new RowRenderer.Default<Object>();
-				}
-				
+				}				
 				Row row = resultSet.one();
+                if(row ==null) return null;
 				ColumnDefinitions columnDefinitions = row.getColumnDefinitions();
 				
 				if(result ==null){
@@ -205,6 +177,7 @@ public class Select extends CassandraOperation {
 				}
 
 				Row row = resultSet.one();
+				if(row==null) return null;
 				ColumnDefinitions columnDefinitions = row.getColumnDefinitions();
 				if(result ==null){
 					result = renderer.newRow(columnDefinitions.size());
@@ -235,6 +208,33 @@ public class Select extends CassandraOperation {
 			ColumnDefinitions metadata=resultSet.getColumnDefinitions();
 			int columnCount = metadata.size();
 			for(Row row:resultSet){
+				Object cookies = rowListener.rowStart(columnCount);
+				for (int i = 0; i < columnCount; i++) {
+                    Object value=row.getObject(i);
+                    if(value !=null){
+                    	rowListener.columnFound(cookies, i, metadata, value);
+                    }
+				}
+				rowListener.rowEnd(cookies);
+			}
+		}
+		catch (Exception ex){
+			throw new BaseException("core.cql_error","Error occurs when executing cql:" + ex.getMessage());
+		}
+	}
+	
+	public void result(RowListener<Object> rowListener,int size)throws BaseException{
+		if (resultSet == null || rowListener == null){
+			return ;
+		}
+		try{
+			ColumnDefinitions metadata=resultSet.getColumnDefinitions();
+			int columnCount = metadata.size();
+			int cnt =0;
+			for(Row row:resultSet){
+				if((cnt++)==size){
+					break;
+				}
 				Object cookies = rowListener.rowStart(columnCount);
 				for (int i = 0; i < columnCount; i++) {
                     Object value=row.getObject(i);
@@ -292,9 +292,21 @@ public class Select extends CassandraOperation {
 		return data.getResult();
 	}
 	
+	public List<Map<String,Object>> result(int size)throws BaseException{
+		RowListener.Default<Object> data = new RowListener.Default<Object>();
+		result(data,size);
+		return data.getResult();
+	}
+	
 	public List<Map<String,Object>> result(RowRenderer<Object> renderer)throws BaseException{
 		RowListener.Default<Object> data = new RowListener.Default<Object>(renderer);
 		result(data);
+		return data.getResult();
+	}
+	
+	public List<Map<String,Object>> result(RowRenderer<Object> renderer,int size)throws BaseException{
+		RowListener.Default<Object> data = new RowListener.Default<Object>(renderer);
+		result(data,size);
 		return data.getResult();
 	}
 	
