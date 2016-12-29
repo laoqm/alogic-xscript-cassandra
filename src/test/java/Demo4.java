@@ -14,7 +14,7 @@ public class Demo4 {
 				"java:///com/alogicbus/cassandra/context/cassandra.source.xml#com.alogicbus.cassandra.context.CassandraSource");
 		try {
 			CassandraSource.get();// 解析配置文件
-			Session s = SessionManager.getSession("conn1");
+			Session s = SessionManager.getSession("c1");
 			ResultSet rs = s.execute("select *  from users");
 			ColumnDefinitions metadata = rs.getColumnDefinitions();
 			int columnNum = metadata.size();

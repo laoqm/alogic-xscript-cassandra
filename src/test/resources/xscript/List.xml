@@ -7,7 +7,7 @@
 	<!-- <constants id="keyword" value="kai" /> -->
 	
 	<cass-conf>
-		<cassandra connection="conn1">	
+		<cass connId="c1">	
 			<list tag="data"
 				cql.Query="
 	 				SELECT
@@ -21,6 +21,6 @@
 	 				    )}
 	 				    
 	 			" />
-		</cassandra>
+		</cass>
 	</cass-conf>
 </script>

@@ -33,15 +33,17 @@ public class Demo {
 		System.out.println("#########################################################");
 	}
 	
-	public static void main(String[] args) {
-		Settings settings = Settings.get();		
+	public static void main(String[] args) {		
+		Settings settings = Settings.get();
 		settings.addSettings(new CommandLine(args));
-		settings.SetValue("servant.config.master","java:///com/alogicbus/cassandra/context/servant.catalog.xml#com.alogicbus.cassandra.context.CassandraSource");
-		settings.SetValue("cassandra.master","java:///com/alogicbus/cassandra/context/cassandra.source.xml#com.alogicbus.cassandra.context.CassandraSource");
-		run("java:///xscript/list.xml#Demo",settings);
-		
-		SessionManager.close();//手动关闭客户端连接
-		
+		settings.addSettings("java:///conf/settings.xml#App", null, Settings.getResourceFactory());
+		try {
+			
+			 run("java:///xscript/List.xml#App", settings);
+			 
+		} finally {
+			 SessionManager.close();
+		}
 	}
 
 }

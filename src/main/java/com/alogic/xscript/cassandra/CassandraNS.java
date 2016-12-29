@@ -8,6 +8,7 @@ public class CassandraNS extends Segment{
 	public CassandraNS(String tag, Logiclet p) {
 		super(tag, p);
 		registerModule("cassandra",CassandraConn.class);
+		registerModule("cass",CassandraConn.class);
 		registerModule("list",ListAll.class);
 		registerModule("new",New.class);
 		registerModule("query",Query.class);

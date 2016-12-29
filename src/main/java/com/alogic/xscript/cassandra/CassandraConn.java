@@ -22,7 +22,9 @@ public class CassandraConn extends Segment {
 	@Override
 	public void configure(Properties p) {
 		super.configure(p);
-		connId = PropertiesConstants.getString(p, "connection", "");
+		connId = PropertiesConstants.getString(p, "connectionId", "");
+		if("".equals(connId))
+			connId = PropertiesConstants.getString(p, "connId", "");
 	}
 
 	@Override
@@ -38,7 +40,7 @@ public class CassandraConn extends Segment {
 			ctx.setObject(cid, session);
 			super.onExecute(root, current, ctx, watcher);
 		}finally{
-			//SessionManager.close();
+			//SessionManager.close(); 不需要关闭，整个应用生命周期都维护着session实例
 			ctx.removeObject(cid);
 		}
 	}

@@ -14,7 +14,7 @@ public class Demo5 {
 		try {
 			boolean flag=false;
 			CassandraSource.get();// 解析配置文件
-			Session s = SessionManager.getSession("conn1");
+			Session s = SessionManager.getSession("c1");
 			ResultSet rs = s.execute("INSERT INTO users (username, password) values ('a', 'b') IF NOT EXISTS");
 			Row row =rs.one();
 		    if(row !=null){

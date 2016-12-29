@@ -12,7 +12,7 @@ public class Demo6 {
 				"java:///com/alogicbus/cassandra/context/cassandra.source.xml#com.alogicbus.cassandra.context.CassandraSource");
 		try {
 			CassandraSource.get();// 解析配置文件
-			Session s = SessionManager.getSession("s1");
+			Session s = SessionManager.getSession("c1");
 			ResultSet rs = s.execute("UPDATE users SET password ='abc' WHERE username = 'laoqiming'");
 			boolean flag = rs.one().getBool("[applied]");
 			System.out.println(flag);
