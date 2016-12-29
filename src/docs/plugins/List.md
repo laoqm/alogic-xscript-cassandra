@@ -2,7 +2,7 @@ list
 ====
 list用于在Cassandra数据库中查询出多行记录，并以数组的形式输出到文档。
 
-本插件中所使用的CQL支持动态CQL语句，参考[cqlprocessor](cqlprocessor.md)。
+本插件中所使用的CQL支持动态CQL语句，参考[cqlprocessor](Preprocessor.md)。
 
 list必须在某个cassandra/cass语句之内，参见[cassandra/cass](Conn.md)。
 

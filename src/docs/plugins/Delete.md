@@ -2,7 +2,7 @@ delete
 ======
 delete用于执行delete语句。
 
-本插件中所使用的CQL支持动态CQL语句，参考[cqlprocessor](cqlprocessor.md)。
+本插件中所使用的CQL支持动态CQL语句，参考[cqlprocessor](Preprocessor.md)。
 
 delete必须在某个cassandra/cass语句之内，参见[cassandra/cass](Conn.md)。
 

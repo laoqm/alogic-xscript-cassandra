@@ -2,7 +2,7 @@ query
 =====
 query用于在cassandra中查询出单行记录，并以对象的形式输出到文档，或者扩展当前文档节点的对象属性。
 
-本插件中所使用的CQL支持动态CQL语句，参考[cqlprocessor](cqlprocessor.md)。
+本插件中所使用的CQL支持动态CQL语句，参考[cqlprocessor](Preprocessor.md)。
 
 query必须在某个cassandra/cass语句之内，参见[cassandra/cass](Conn.md)。
 
